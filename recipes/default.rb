@@ -17,13 +17,19 @@
 # limitations under the License.
 #
 
-
+package "subversion" do
+  action :install
+end
+subversion "/wikiarguments" do
+  repository "http://wikiarguments.googlecode.com/svn/trunk/"
+  action :checkout
+end
 
 ### -- Install Mysql -- ##
 
 # secure password generation
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
-node.set_unless['gitlab']['database']['password'] = secure_password
+node.set_unless['wikiarguments']['database']['password'] = secure_password
 ruby_block "save node data" do
   block do
     node.save
@@ -70,19 +76,6 @@ mysql_database
 * import sql database from /sql.
 
 
-
-### -- Install Webserver -- ##
-
-include_recipe node['wikiarguments']['webserver']
-
-if node['wikiarguments']['shortener']
-  codebase = "/src/shortener_base"
-else
-  codebase = "/src/production_base"
-end
-
-
-
 template "/src/production_base/etc/config.php" do
   variables ({
     "mysql_dbname" => node['wikiarguments']['database']['database'],
@@ -93,18 +86,51 @@ template "/src/production_base/etc/config.php" do
 end
 
 
+### -- Install Webserver -- ##
+# Lighttpd with mod_rewrite or Apache2 with mod_rewrite.
 
-%w{php5-memcache php5-imap}.each do |pkg|
+%w{php5 php5-memcache php5-imap memcached}.each do |pkg|
   package pkg
 end
 
-*** Dependencies ***
-* Lighttpd with mod_rewrite or Apache2 with mod_rewrite.
-* php >=5.2
-* mysql
-* memcached
-* php-memcache
-* php-imap
+if node['wikiarguments']['webserver'] == "lighttpd"
+
+  package "lighttpd"
+  service "lighttpd"
+
+  template "/etc/lighttpd/conf-available/70-wikiarguments.conf" do
+    source "wikiarguments-lighttpd.erb"
+    mode 0644
+    notifies :restart, resources(:service => "lighttpd")
+  end
+
+  link "/etc/lighttpd/conf-enabled/70-wikiarguments.conf" do
+    to "/etc/lighttpd/conf-available/70-wikiarguments.conf"
+    notifies :restart, resources(:service => "lighttpd")
+  end
+
+end
+#TODO SUPPORT APACHE2
+
+
+
+#TODO SUPPORT SHORTENER
+if node['wikiarguments']['shortener']
+  codebase = "/src/shortener_base"
+else
+  codebase = "/src/production_base"
+end
+
+
+
+
+
+
+
+
+
+
+
 
 *** Installation details or Lighttpd ***
 * If you use lighttpd, use /lighttpd/rewrite_global.conf for mod_rewrite, i.e. add

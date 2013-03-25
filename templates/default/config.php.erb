@@ -48,23 +48,23 @@ define("MYSQL_NAME",                        "<%=@mysql_dbname%>");
 define("MYSQL_NAME_GLOBAL",                 MYSQL_NAME);
 
 /* url to the template directory with trailing slash */
-define("TEMPLATE_ROOT",                     "http://de.wikiarguments.net/tpl/default/");
+define("TEMPLATE_ROOT",                     "http://<%=node['fqdn']%>/tpl/default/");
 
 /* absolute path to the template directory on the file system */
 define("TEMPLATE_ROOT_ABS",                 "");
 
 /* base url */
-define("SITE_ROOT",                         "http://de.wikiarguments.net/");
+define("SITE_ROOT",                         "http://<%=node['fqdn']%>/");
 
 /* may be used later */
-define("AJAX_URL",                          "http://de.wikiarguments.net/ajax.php");
+define("AJAX_URL",                          "http://<%=node['fqdn']%>/ajax.php");
 
 /* url to the short url service */
 define("SHORTURL_BASE",                     "http://wa.nf/");
 
 /* sendmail data */
-define("SENDMAIL_FROM",                     "");
-define("SENDMAIL_FROM_NAME",                "");
+define("SENDMAIL_FROM",                     "<%=node['wikiarguments']['email']%>");
+define("SENDMAIL_FROM_NAME",                "<%=node['wikiarguments']['email_name']%>");
 
 setlocale(LC_ALL, 'de_DE');
 
