@@ -16,3 +16,102 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+
+
+### -- Install Mysql -- ##
+
+# secure password generation
+::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+node.set_unless['gitlab']['database']['password'] = secure_password
+ruby_block "save node data" do
+  block do
+    node.save
+  end
+  not_if { Chef::Config[:solo] }
+end
+
+
+
+# Helper variables
+database = node['wikiarguments']['database']['database']
+database_user = node['wikiarguments']['database']['username']
+database_password = node['wikiarguments']['database']['password']
+database_host = node['wikiarguments']['database']['host']
+database_connection = {
+  :host     => database_host,
+  :username => 'root',
+  :password => node['mysql']['server_root_password']
+}
+
+# Create the database
+mysql_database database do
+  connection      database_connection
+  action          :create
+end
+
+# Create the database user
+mysql_database_user database_user do
+  connection      database_connection
+  password        database_password
+  database_name   database
+  action          :create
+end
+
+# Grant all privileges to user on database
+mysql_database_user database_user do
+  connection      database_connection
+  database_name   database
+  action          :grant
+end
+
+
+mysql_database
+* import sql database from /sql.
+
+
+
+### -- Install Webserver -- ##
+
+include_recipe node['wikiarguments']['webserver']
+
+if node['wikiarguments']['shortener']
+  codebase = "/src/shortener_base"
+else
+  codebase = "/src/production_base"
+end
+
+
+
+template "/src/production_base/etc/config.php" do
+  variables ({
+    "mysql_dbname" => node['wikiarguments']['database']['database'],
+    "mysql_user" => node['wikiarguments']['database']['username'],
+    "mysql_password" => node['wikiarguments']['database']['password'],
+    "mysql_host" => node['wikiarguments']['database']['host']
+    })
+end
+
+
+
+%w{php5-memcache php5-imap}.each do |pkg|
+  package pkg
+end
+
+*** Dependencies ***
+* Lighttpd with mod_rewrite or Apache2 with mod_rewrite.
+* php >=5.2
+* mysql
+* memcached
+* php-memcache
+* php-imap
+
+*** Installation details or Lighttpd ***
+* If you use lighttpd, use /lighttpd/rewrite_global.conf for mod_rewrite, i.e. add
+include "<path_to_wikiarguments>/lighttpd/rewrite_global.conf"
+to your lighttpd config.
+
+*** Installation details for Apache2 ***
+* The .htaccess file is currently only experimental and may require some modifications.
+* If you use apache2, use /apache2/.htaccess for mod_rewrite,
+i.e. copy it to your production_base folder.
