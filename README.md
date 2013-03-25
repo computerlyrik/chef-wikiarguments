@@ -1,6 +1,8 @@
 wikiarguments Cookbook
 ======================
-TODO: Enter the cookbook description here.
+
+Code Repo: https://github.com/computerlyrik/chef-wikiarguments
+
 
 e.g.
 This cookbook makes your favorite breakfast sandwhich.
