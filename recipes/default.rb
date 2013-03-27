@@ -53,7 +53,9 @@ database_connection = {
 # Create the database
 mysql_database database do
   connection      database_connection
-  action          :create
+  action          [:create,:query]
+  sql_query " source /wikiarguments/sql/structur.sql;
+              source /wikiarguments/sql/data.sql;"
 end
 
 # Create the database user
@@ -72,8 +74,7 @@ mysql_database_user database_user do
 end
 
 
-mysql_database
-* import sql database from /sql.
+
 
 
 template "/src/production_base/etc/config.php" do
