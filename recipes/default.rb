@@ -112,7 +112,10 @@ if node['wikiarguments']['webserver'] == "lighttpd"
 
 end
 #TODO SUPPORT APACHE2
-
+#*** Installation details for Apache2 ***
+#* The .htaccess file is currently only experimental and may require some modifications.
+#* If you use apache2, use /apache2/.htaccess for mod_rewrite,
+#i.e. copy it to your production_base folder.
 
 
 #TODO SUPPORT SHORTENER
@@ -132,13 +135,3 @@ end
 
 
 
-
-*** Installation details or Lighttpd ***
-* If you use lighttpd, use /lighttpd/rewrite_global.conf for mod_rewrite, i.e. add
-include "<path_to_wikiarguments>/lighttpd/rewrite_global.conf"
-to your lighttpd config.
-
-*** Installation details for Apache2 ***
-* The .htaccess file is currently only experimental and may require some modifications.
-* If you use apache2, use /apache2/.htaccess for mod_rewrite,
-i.e. copy it to your production_base folder.
