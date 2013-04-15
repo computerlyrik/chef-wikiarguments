@@ -54,7 +54,7 @@ database_connection = {
 mysql_database database do
   connection      database_connection
   action          [:create,:query]
-  sql_query " source /wikiarguments/sql/structur.sql;
+  sql         "source /wikiarguments/sql/structur.sql;
               source /wikiarguments/sql/data.sql;"
 end
 
