@@ -37,7 +37,7 @@ ruby_block "save node data" do
   not_if { Chef::Config[:solo] }
 end
 
-
+include_recipe "database::mysql"
 
 # Helper variables
 database = node['wikiarguments']['database']['database']
