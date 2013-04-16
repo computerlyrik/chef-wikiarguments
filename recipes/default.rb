@@ -100,7 +100,9 @@ end
 ### -- Install Webserver -- ##
 # Lighttpd with mod_rewrite or Apache2 with mod_rewrite.
 
-%w{php5 php5-memcache php5-imap memcached}.each do |pkg|
+
+#Removing php5 package due to depends on apache2-mpm-prefork
+%w{php5-memcache php5-imap memcached}.each do |pkg|
   package pkg
 end
 
