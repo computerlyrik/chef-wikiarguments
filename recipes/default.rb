@@ -86,7 +86,7 @@ end
 
 
 
-template "/src/production_base/etc/config.php" do
+template "/wikiarguments/src/production_base/etc/config.php" do
   variables ({
     "mysql_dbname" => node['wikiarguments']['database']['database'],
     "mysql_user" => node['wikiarguments']['database']['username'],
