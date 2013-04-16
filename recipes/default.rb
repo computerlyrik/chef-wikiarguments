@@ -53,13 +53,13 @@ database_connection = {
 
 # Create the database
 mysql_database "create_#{database}" do
-  database        database
+  database_name   database
   connection      database_connection
   action          :create
 end
 
 mysql_database "setup_#{database}" do
-  database        database
+  database_name   database
   connection      database_connection
   sql         "source /wikiarguments/sql/structure.sql;
               source /wikiarguments/sql/data.sql;"
