@@ -64,7 +64,7 @@ mysql_database "setup_#{database}" do
   sql         "source /wikiarguments/sql/structure.sql;
               source /wikiarguments/sql/data.sql;"
   action          :nothing
-  subscribes      :query, resources(mysql_database["create_#{database}"])
+  subscribes      :query, resources("mysql_database[create_#{database}]")
 end
 
 # Create the database user
