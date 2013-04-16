@@ -52,11 +52,19 @@ database_connection = {
 }
 
 # Create the database
-mysql_database database do
+mysql_database "create_#{database}" do
+  database        database
   connection      database_connection
-  action          [:create,:query]
+  action          :create
+end
+
+mysql_database "setup_#{database}" do
+  database        database
+  connection      database_connection
   sql         "source /wikiarguments/sql/structure.sql;
               source /wikiarguments/sql/data.sql;"
+  action          :nothing
+  subscribes      :query, resources(mysql_database["create_#{database}"])
 end
 
 # Create the database user
