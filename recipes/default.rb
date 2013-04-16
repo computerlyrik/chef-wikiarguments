@@ -58,6 +58,7 @@ mysql_database "create_#{database}" do
   action          :create
 end
 
+#TODO chef throws incorrect mysql syntax error
 mysql_database "setup_#{database}" do
   database_name   database
   connection      database_connection
@@ -105,6 +106,7 @@ end
 
 if node['wikiarguments']['webserver'] == "lighttpd"
 
+#TODO PAckage installation fails, due to apache is installed with php5 packages
   package "lighttpd"
   service "lighttpd"
 
