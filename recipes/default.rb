@@ -96,6 +96,7 @@ template "/wikiarguments/src/production_base/etc/config.php" do
     })
 end
 
+package "sendmail-bin"
 
 ### -- Install Webserver -- ##
 # Lighttpd with mod_rewrite or Apache2 with mod_rewrite.
