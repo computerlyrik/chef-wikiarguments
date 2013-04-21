@@ -55,7 +55,6 @@ database_connection = {
 mysql_database "create_#{database}" do
   database_name   database
   connection      database_connection
-  encoding "utf8"
   action          :create
 end
 
