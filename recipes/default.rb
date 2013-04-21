@@ -113,6 +113,8 @@ if node['wikiarguments']['webserver'] == "lighttpd"
   package "lighttpd"
   service "lighttpd"
 
+#optional: enable ssl
+
   template "/etc/lighttpd/conf-available/70-wikiarguments.conf" do
     source "wikiarguments-lighttpd.erb"
     mode 0644
@@ -121,6 +123,7 @@ if node['wikiarguments']['webserver'] == "lighttpd"
 
   link "/etc/lighttpd/conf-enabled/70-wikiarguments.conf" do
     to "/etc/lighttpd/conf-available/70-wikiarguments.conf"
+    variables ({:ssl => true})
     notifies :restart, resources(:service => "lighttpd")
   end
 
